@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\renderer">
+      <UniqueIdentifier>{24a0b95c-c1df-432d-ba5b-991439d46536}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\renderer\dx12">
+      <UniqueIdentifier>{4141aacf-18dc-4ade-9ec3-77fd74e4c379}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\renderer\dx12\utils">
+      <UniqueIdentifier>{794736d1-5190-4fc9-a124-56acbeda5925}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\renderer">
+      <UniqueIdentifier>{0d12b9fc-9cc7-4951-aebb-c7339c136210}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\renderer\dx12">
+      <UniqueIdentifier>{2656b502-9cc1-427f-bc0c-1600c15182d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\renderer\dx12\utils">
+      <UniqueIdentifier>{2003fec7-3b99-4063-be70-49da47d6f7ef}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Instance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Defines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="DX12Renderer.h">
+      <Filter>Header Files\renderer\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="DX12Device.h">
+      <Filter>Header Files\renderer\dx12\utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Instance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Source Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="DX12Renderer.cpp">
+      <Filter>Source Files\renderer\dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="DX12Device.cpp">
+      <Filter>Source Files\renderer\dx12\utils</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

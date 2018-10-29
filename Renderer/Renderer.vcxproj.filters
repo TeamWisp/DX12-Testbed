@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\renderer">
+      <UniqueIdentifier>{8114a22a-2b7c-4c84-8e45-183a8d2f95b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\renderer\dx12">
+      <UniqueIdentifier>{6ee8a38b-5963-4898-9d0b-0cf98968988d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\renderer\dx12\utils">
+      <UniqueIdentifier>{9e3aa1a9-6239-4cea-b651-dd67b5266240}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\renderer">
+      <UniqueIdentifier>{9fa2830f-a949-4d48-809b-77a8a8ce9fc1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\renderer\dx12">
+      <UniqueIdentifier>{b571d851-0a2f-40ac-a44e-9f60440f67a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\renderer\dx12\utils">
+      <UniqueIdentifier>{505467a9-aedd-4864-9e4a-40a19f3744ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\shaders">
+      <UniqueIdentifier>{bb74dddf-a2e7-4417-b8e3-c55069cd49e6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Defines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Instance.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="D3dx12.h">
+      <Filter>Header Files\renderer\dx12\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="DX12CommandAllocator.h">
+      <Filter>Header Files\renderer\dx12\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="DX12Device.h">
+      <Filter>Header Files\renderer\dx12\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="DX12CommandList.h">
+      <Filter>Header Files\renderer\dx12\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="DX12Renderer.h">
+      <Filter>Header Files\renderer\dx12</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="DX12Fence.h">
+      <Filter>Header Files\renderer\dx12\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="DX12PipelineStateObject.h">
+      <Filter>Header Files\renderer\dx12\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="DX12RootSignature.h">
+      <Filter>Header Files\renderer\dx12\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="MemoryManager.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Input.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Instance.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DX12CommandAllocator.cpp">
+      <Filter>Source Files\renderer\dx12\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="DX12CommandList.cpp">
+      <Filter>Source Files\renderer\dx12\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="DX12Device.cpp">
+      <Filter>Source Files\renderer\dx12\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="DX12Renderer.cpp">
+      <Filter>Source Files\renderer\dx12</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Source Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="DX12Fence.cpp">
+      <Filter>Source Files\renderer\dx12\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="DX12PipelineStateObject.cpp">
+      <Filter>Source Files\renderer\dx12\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="DX12RootSignature.cpp">
+      <Filter>Source Files\renderer\dx12\utils</Filter>
+    </ClCompile>
+    <ClCompile Include="MemoryManager.cpp">
+      <Filter>Source Files\renderer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="VertexShader.hlsl">
+      <Filter>Resource Files\shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="PixelShader.hlsl">
+      <Filter>Resource Files\shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>
