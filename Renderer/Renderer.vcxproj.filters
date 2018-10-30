@@ -78,8 +78,8 @@
     <ClInclude Include="DX12RootSignature.h">
       <Filter>Header Files\renderer\dx12\utils</Filter>
     </ClInclude>
-    <ClInclude Include="MemoryManager.h">
-      <Filter>Header Files\renderer</Filter>
+    <ClInclude Include="DX12MemoryManager.h">
+      <Filter>Header Files\renderer\dx12\utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -116,8 +116,8 @@
     <ClCompile Include="DX12RootSignature.cpp">
       <Filter>Source Files\renderer\dx12\utils</Filter>
     </ClCompile>
-    <ClCompile Include="MemoryManager.cpp">
-      <Filter>Source Files\renderer</Filter>
+    <ClCompile Include="DX12MemoryManager.cpp">
+      <Filter>Source Files\renderer\dx12\utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

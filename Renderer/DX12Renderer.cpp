@@ -13,6 +13,14 @@ namespace renderer {
 
 		DX12Renderer::~DX12Renderer()
 		{
+			for (int i = 0; i < FRAME_BUFFER_COUNT; ++i) {
+				if (fences[i]->GetCompletedValue() < fences[i]->GetValue()) {
+					fences[i]->SetFenceEvent(fences[i]->GetValue(), fenceEvent);
+
+					WaitForSingleObject(fenceEvent, INFINITE);
+				}
+			}
+			delete memoryManager;
 			delete defaultPSO;
 			delete defaultRootSignature;
 
@@ -22,10 +30,10 @@ namespace renderer {
 				delete fences[i];
 			}
 
-			delete primaryCommandList;
 
 			for (int i = 0; i < commandAllocators.size(); ++i) {
 				delete commandAllocators[i];
+				delete primaryCommandLists[i];
 			}
 
 			delete bundleAllocator;
@@ -88,6 +96,10 @@ namespace renderer {
 			defaultPSO->LoadShader(L"PixelShader.hlsl", utils::ShaderType::PIXEL_SHADER, {}, nullptr, NULL);
 
 			defaultPSO->AddInputElementDescription("POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0);
+			defaultPSO->AddInputElementDescription("COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0);
+
+			defaultPSO->SetNumberOfRenderTargets(1);
+			defaultPSO->SetRenderTargetFormat(0, window->GetDisplayMode().description.Format);
 
 			defaultPSO->SetRootSignature(defaultRootSignature);
 
@@ -95,9 +107,34 @@ namespace renderer {
 
 			memoryManager = new utils::DX12MemoryManager();
 
-			memoryManager->Initialize(16 * 1024 * 1024, 128*1024, 128 * 1024 * 1024, renderer::MemoryType::DEFAULT);
+			memoryManager->Initialize(device, commandQueue, 32 * 1024 * 1024, 4 * 1024 * 1024);
 
-			CD3DX12_HEAP_DESC
+			std::vector<Vertex> vertices = {
+				{{-0.5f,-0.5f,0.5f}, {1.f,0.f,0.f,1.f}},
+				{{0.5f,-0.5f,0.5f},{0.f,1.f,0.f,1.f}},
+				{{0.0f,0.5f,0.5f},{0.f,0.f,1.f,1.f}}
+			};
+
+			vertexBuffer = memoryManager->MallocBuffer(sizeof(Vertex)*vertices.size());
+
+			memoryManager->SetBufferData(vertexBuffer, 0,
+				sizeof(Vertex)*vertices.size(), (vertices.data()));
+
+			vertexBufferView.BufferLocation = memoryManager->GetResource(vertexBuffer)->GetGPUVirtualAddress();
+			vertexBufferView.StrideInBytes = sizeof(Vertex);
+			vertexBufferView.SizeInBytes = sizeof(Vertex)*vertices.size();
+
+			viewport.TopLeftX = 0;
+			viewport.TopLeftY = 0;
+			viewport.Width = window->GetDisplayMode().width;
+			viewport.Height = window->GetDisplayMode().height;
+			viewport.MinDepth = 0.f;
+			viewport.MaxDepth = 1.f;
+
+			scissorRect.left = 0;
+			scissorRect.top = 0;
+			scissorRect.right = window->GetDisplayMode().width;
+			scissorRect.bottom = window->GetDisplayMode().height;
 
 			return 0;
 		}
@@ -118,28 +155,37 @@ namespace renderer {
 
 			commandAllocators[frameIndex]->Reset();
 
-			primaryCommandList->Reset(commandAllocators[frameIndex], nullptr);
+			primaryCommandLists[frameIndex]->Reset(commandAllocators[frameIndex], defaultPSO->GetPSO());
 
-			primaryCommandList->ResourceBarrier({ CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex],D3D12_RESOURCE_STATE_PRESENT,D3D12_RESOURCE_STATE_RENDER_TARGET) });
+			primaryCommandLists[frameIndex]->ResourceBarrier({ CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex],D3D12_RESOURCE_STATE_PRESENT,D3D12_RESOURCE_STATE_RENDER_TARGET) });
 
 			CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(rtvDescriptorHeap->GetCPUDescriptorHandleForHeapStart(), frameIndex, device->GetRtvDescriptorSize());
 
-			primaryCommandList->OMSetRenderTargets({ rtvHandle }, nullptr);
+			primaryCommandLists[frameIndex]->OMSetRenderTargets({ rtvHandle }, nullptr);
 
 			float clearColor[] = { 0.0f,0.2f,0.4f,1.f };
 
-			primaryCommandList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+			primaryCommandLists[frameIndex]->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+
+			primaryCommandLists[frameIndex]->SetGraphicsRootSignature(defaultRootSignature);
+			primaryCommandLists[frameIndex]->RSSetViewports({ viewport });
+			primaryCommandLists[frameIndex]->RSSetScissorRects({ scissorRect });
+			primaryCommandLists[frameIndex]->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+			primaryCommandLists[frameIndex]->IASetVertexBuffers(0, { vertexBufferView });
+			primaryCommandLists[frameIndex]->DrawInstanced(3, 1, 0, 0);
 
 		}
 
 		void DX12Renderer::RenderEnd()
 		{
 
-			primaryCommandList->ResourceBarrier({ CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex],D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT) });
+			primaryCommandLists[frameIndex]->ResourceBarrier({ CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex],D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT) });
 
-			primaryCommandList->Close();
+			primaryCommandLists[frameIndex]->Close();
 
-			ID3D12CommandList* ppCommandLists[] = { primaryCommandList->GetCommandList() };
+			ID3D12CommandList* ppCommandLists[] = { primaryCommandLists[frameIndex]->GetCommandList() };
+
+			memoryManager->WaitForMemoryOperations();
 
 			commandQueue->ExecuteCommandLists(1, ppCommandLists);
 
@@ -212,12 +258,12 @@ namespace renderer {
 		int DX12Renderer::CreateCommandAllocators()
 		{
 			commandAllocators.resize(FRAME_BUFFER_COUNT);
+			primaryCommandLists.resize(FRAME_BUFFER_COUNT);
 			for (int i = 0; i < commandAllocators.size(); ++i) {
 				commandAllocators[i] = new utils::DX12CommandAllocator(device, D3D12_COMMAND_LIST_TYPE_DIRECT);
+				primaryCommandLists[i] = commandAllocators[i]->CreateCommandList(D3D12_COMMAND_LIST_TYPE_DIRECT);
 			}
 			bundleAllocator = new utils::DX12CommandAllocator(device, D3D12_COMMAND_LIST_TYPE_BUNDLE);
-
-			primaryCommandList = commandAllocators[0]->CreateCommandList(D3D12_COMMAND_LIST_TYPE_DIRECT);
 
 			return 0;
 		}

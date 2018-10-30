@@ -6,7 +6,7 @@
 IDXGIFactory5* Window::factory = nullptr;
 std::vector<Window::DisplayAdapter> Window::adapters = std::vector<Window::DisplayAdapter>();
 std::map<HWND, Window*> Window::windows = std::map<HWND, Window*>();
-DXGI_FORMAT Window::backBufferFormat = DXGI_FORMAT_B8G8R8A8_UNORM;
+DXGI_FORMAT Window::backBufferFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 std::vector<Window::DisplayAdapter> Window::GetDisplayAdapters()
 {
@@ -125,7 +125,7 @@ Window::Window(DisplayMode mode, std::wstring name, bool fullscreen)
 	instance = GetModuleHandle(NULL);
 
 	wc.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wc.lpfnWndProc = MsgHandler;
+	wc.lpfnWndProc = Window::MsgHandler;
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hInstance = instance;
@@ -279,7 +279,7 @@ DXGI_FORMAT Window::GetBackBufferFormat()
 	return backBufferFormat;
 }
 
-LRESULT MsgHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+LRESULT Window::MsgHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
 	switch (umsg) {
 

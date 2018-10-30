@@ -12,6 +12,8 @@
 
 #include "Defines.h"
 
+#include <DirectXMath.h>
+
 #pragma comment(lib, "d3d12.lib")
 
 namespace renderer {
@@ -58,12 +60,23 @@ namespace renderer {
 
 			utils::DX12CommandAllocator* bundleAllocator;
 
-			utils::DX12CommandList* primaryCommandList;
+			std::vector<utils::DX12CommandList*> primaryCommandLists;
 
 			utils::DX12PipelineStateObject* defaultPSO;
 			utils::DX12RootSignature* defaultRootSignature;
 
-			MemoryManager* memoryManager;
+			utils::DX12MemoryManager* memoryManager;
+
+			utils::DX12MemoryManager::MemoryAllocation vertexBuffer;
+
+			D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
+			D3D12_VIEWPORT viewport;
+			D3D12_RECT scissorRect;
+
+			struct Vertex {
+				DirectX::XMFLOAT3 Postion;
+				DirectX::XMFLOAT4 Color;
+			};
 		};
 	}
 }

@@ -80,6 +80,6 @@ int main(int argc, char** argv) {
 	instance->Cleanup();
 
 	delete instance;
-	getchar();
+	//getchar();
 	return 0;
 }

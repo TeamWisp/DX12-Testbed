@@ -127,7 +127,6 @@
     <ClInclude Include="DX12RootSignature.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Instance.h" />
-    <ClInclude Include="MemoryManager.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="Window.h" />
@@ -143,7 +142,6 @@
     <ClCompile Include="DX12RootSignature.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Instance.cpp" />
-    <ClCompile Include="MemoryManager.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>

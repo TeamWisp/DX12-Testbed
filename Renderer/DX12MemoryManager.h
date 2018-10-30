@@ -1,12 +1,24 @@
 #pragma once
-#include "MemoryManager.h"
+
+#include <vector>
 
 #include <d3d12.h>
 #include "D3dx12.h"
 
+#include "DX12Device.h"
+#include "DX12CommandAllocator.h"
+#include "DX12CommandList.h"
+#include "DX12Fence.h"
+
 namespace renderer {
 	namespace dx12 {
 		namespace utils {
+
+			enum ResourceType {
+				BUFFER = 0,
+				TEXTURE,
+				RT_DS_TEXTURE
+			};
 
 			class DX12MemoryManager
 			{
@@ -14,21 +26,28 @@ namespace renderer {
 				DX12MemoryManager();
 				virtual ~DX12MemoryManager();
 
-				virtual void Initialize(size_t bufferHeapSize);
+				using MemoryAllocation = uint64_t;
 
-				uint64_t MallocBuffer(size_t size);
+				virtual void Initialize(Device* device, ID3D12CommandQueue* commandQueue, size_t heapSize, size_t uploadHeapSize);
 
-				uint64_t MallocImage(size_t x, size_t y, size_t z, size_t pixelSize);
+				//Memory blocks are initialized into D3D12_RESOURCE_STATE_COMMON
+				MemoryAllocation MallocBuffer(size_t size, bool largeCommit = false);
 
-				void Free(uint64_t memoryBlock);
+				MemoryAllocation MallocImage(size_t x, size_t y, size_t z, size_t pixelSize);
+
+				void Free(MemoryAllocation memoryBlock);
 				
-				void SetBufferData(uint64_t memoryBlock, size_t offset, size_t size, char* data);
+				void SetBufferData(MemoryAllocation memoryBlock, size_t offset, size_t size, void* data,
+					D3D12_RESOURCE_STATES currentState = D3D12_RESOURCE_STATE_COMMON, 
+					D3D12_RESOURCE_STATES finalState = D3D12_RESOURCE_STATE_VERTEX_AND_CONSTANT_BUFFER);
 
-				std::vector<char> ReadData(uint64_t memoryBlock);
+				void WaitForMemoryOperations();
 
-				void* GetImageMemoryData(uint64_t memoryBlock);
+				std::vector<char> ReadData(MemoryAllocation memoryBlock);
 
-				void* GetBufferImplementationData(uint64_t memoryBlock);
+				void* GetImageMemoryData(MemoryAllocation memoryBlock);
+
+				ID3D12Resource* GetResource(MemoryAllocation memoryBlock);
 
 			protected:
 				struct MemoryBlock;
@@ -40,6 +59,8 @@ namespace renderer {
 					MemoryBlock* largestFreeBlock;
 					MemoryBlock* firstBlock;
 					bool allocated;
+					bool largeBlock;
+					ResourceType resourceType;
 					ID3D12Heap* heap;
 				};
 
@@ -47,6 +68,7 @@ namespace renderer {
 					size_t size;
 					size_t offset;
 					bool free;
+					bool largeCommit;
 					Heap* heap;
 					MemoryBlock* prevBlock;
 					MemoryBlock* nextBlock;
@@ -54,12 +76,33 @@ namespace renderer {
 					ID3D12Resource* resource;
 				};
 
+				struct UploadHeap {
+					ID3D12Resource* resource;
+					size_t size;
+					size_t currentOffset;
+					ResourceType resourceType;
+					void* CPUAddress;
+				};
+
 				std::vector<Heap*> heaps;
 
-				std::vector<uint64_t> allocatedBlocks;
+				std::vector<MemoryAllocation> allocatedBlocks;
 
-				size_t bufferHeapSize;
-				size_t bufferAlignment;
+				std::vector<UploadHeap*> uploadHeaps;
+
+				Device* device;
+				DX12CommandAllocator* commandAllocator;
+				DX12CommandList* commandList;
+				DX12Fence* fence;
+				HANDLE fenceEvent;
+				uint64_t fenceValue;
+
+				ID3D12CommandQueue* commandQueue;
+
+				size_t heapSize;
+				size_t heapAlignment;
+
+				size_t uploadHeapSize;
 
 				void AllocateHeap(Heap* heap);
 

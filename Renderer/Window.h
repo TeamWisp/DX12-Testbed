@@ -64,6 +64,8 @@ public:
 
 	static DXGI_FORMAT GetBackBufferFormat();
 
+	static LRESULT CALLBACK MsgHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);
+
 protected:
 	static IDXGIFactory5 * factory;
 
@@ -83,5 +85,3 @@ protected:
 
 	bool fullscreen;
 };
-
-static LRESULT CALLBACK MsgHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam);

@@ -9,6 +9,8 @@ namespace renderer {
 		namespace utils {
 			class DX12CommandAllocator;
 
+			class DX12RootSignature;
+
 			class DX12CommandList
 			{
 			public:
@@ -36,6 +38,20 @@ namespace renderer {
 				void OMSetRenderTargets(UINT descriptorCount, D3D12_CPU_DESCRIPTOR_HANDLE* renderTargetDescriptors, D3D12_CPU_DESCRIPTOR_HANDLE* depthStencilDescriptor);
 
 				void ClearRenderTargetView(D3D12_CPU_DESCRIPTOR_HANDLE renderTargetView, FLOAT colorRGBA[4], UINT numRects, D3D12_RECT* rects);
+
+				void SetGraphicsRootSignature(DX12RootSignature* rootSignature);
+
+				void RSSetViewports(std::vector<D3D12_VIEWPORT> viewports);
+
+				void RSSetScissorRects(std::vector<D3D12_RECT> scissorRects);
+
+				void IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY topology);
+
+				void IASetVertexBuffers(unsigned int startSlot, std::vector<D3D12_VERTEX_BUFFER_VIEW> vertexBufferViews);
+
+				void DrawInstanced(unsigned int vertexCount, unsigned int instanceCount, unsigned int startVertex, unsigned int startInstance);
+
+				void CopyBufferRegion(ID3D12Resource* pDstBuffer, uint64_t dstOffset, ID3D12Resource* pSrcBuffer, uint64_t srcOffset, uint64_t numBytes);
 
 				void Close();
 

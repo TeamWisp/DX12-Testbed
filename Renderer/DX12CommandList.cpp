@@ -1,5 +1,6 @@
 #include "DX12CommandList.h"
 #include "DX12CommandAllocator.h"
+#include "DX12RootSignature.h"
 
 namespace renderer {
 	namespace dx12 {
@@ -48,6 +49,55 @@ namespace renderer {
 			{
 				if (!closed) {
 					commandList->ClearRenderTargetView(renderTargetView, colorRGBA, numRects, rects);
+				}
+			}
+
+			void DX12CommandList::SetGraphicsRootSignature(DX12RootSignature * rootSignature)
+			{
+				if (!closed) {
+					commandList->SetGraphicsRootSignature(rootSignature->GetRootSignature());
+				}
+			}
+
+			void DX12CommandList::RSSetViewports(std::vector<D3D12_VIEWPORT> viewports)
+			{
+				if (!closed) {
+					commandList->RSSetViewports(viewports.size(), viewports.data());
+				}
+			}
+
+			void DX12CommandList::RSSetScissorRects(std::vector<D3D12_RECT> scissorRects)
+			{
+				if (!closed) {
+					commandList->RSSetScissorRects(scissorRects.size(), scissorRects.data());
+				}
+			}
+
+			void DX12CommandList::IASetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY topology)
+			{
+				if (!closed) {
+					commandList->IASetPrimitiveTopology(topology);
+				}
+			}
+
+			void DX12CommandList::IASetVertexBuffers(unsigned int startSlot, std::vector<D3D12_VERTEX_BUFFER_VIEW> vertexBufferViews)
+			{
+				if (!closed) {
+					commandList->IASetVertexBuffers(startSlot, vertexBufferViews.size(), vertexBufferViews.data());
+				}
+			}
+
+			void DX12CommandList::DrawInstanced(unsigned int vertexCount, unsigned int instanceCount, unsigned int startVertex, unsigned int startInstance)
+			{
+				if (!closed) {
+					commandList->DrawInstanced(vertexCount, instanceCount, startVertex, startInstance);
+				}
+			}
+
+			void DX12CommandList::CopyBufferRegion(ID3D12Resource * pDstBuffer, uint64_t dstOffset, ID3D12Resource * pSrcBuffer, uint64_t srcOffset, uint64_t numBytes)
+			{
+				if (!closed) {
+					commandList->CopyBufferRegion(pDstBuffer, dstOffset, pSrcBuffer, srcOffset, numBytes);
 				}
 			}
 
